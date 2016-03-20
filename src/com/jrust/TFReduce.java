@@ -1,6 +1,5 @@
 package com.jrust;
 
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -10,13 +9,12 @@ import java.util.HashMap;
 /**
  * Created by Jonathan Rust on 3/2/16.
  */
-public class TFReduce extends Reducer<Text, Iterable, Text, Text> {
+public class TFReduce extends Reducer<Text, Text, Text, Text> {
 
 
+    @Override
     public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-        Configuration conf = context.getConfiguration();
-//        long total_authors = Long.parseLong(conf.get("authors"));
         HashMap<String, Integer> term_count = new HashMap<>();
         Integer max_count = 0;
         for(Text term : values){
@@ -33,8 +31,8 @@ public class TFReduce extends Reducer<Text, Iterable, Text, Text> {
         for (HashMap.Entry<String, Integer> entry : term_count.entrySet()) {
             String term = entry.getKey();
             Integer count = entry.getValue();
-            double tf = (double) count / (double) max_count;
-            String value_string = term + "\t" + tf;
+            Double tf = (double)count / (double)max_count;
+            String value_string = term + "\t" + tf.toString();
             context.write(key, new Text(value_string));
         }
 

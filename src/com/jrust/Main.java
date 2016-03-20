@@ -46,7 +46,7 @@ public class Main {
 
         /* Term Frequency job */
         Configuration tfConf = new Configuration();
-        tfConf.set("authors", authors + "");
+//        tfConf.set("authors", authors + "");
 
         Job tf = Job.getInstance(tfConf, "main");
         tf.setJobName("TF");
@@ -56,11 +56,12 @@ public class Main {
         tf.setOutputKeyClass(Text.class);
         tf.setOutputValueClass(Text.class);
 
-        tf.setMapperClass(TFMap.class);
         tf.setReducerClass(TFReduce.class);
+        tf.setMapperClass(TFMap.class);
 
         FileInputFormat.setInputPaths(tf, new Path(args[0]));
-        FileOutputFormat.setOutputPath(tf, new Path("/tmp/out/tfOut"));
+        FileOutputFormat.setOutputPath(tf, new Path(args[1]));
+//        FileOutputFormat.setOutputPath(tf, new Path("/tmp/out/tfOut"));
 
         tf.waitForCompletion(true);
 
