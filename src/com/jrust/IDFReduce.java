@@ -41,7 +41,7 @@ public class IDFReduce extends Reducer<Text, Text, Text, Text> {
             String author = split[0];
             Double tf = Double.parseDouble(split[1]);
             Double tfidf = tf*idf;
-            context.write(new Text(key.toString() + " " + author), new Text(tfidf.toString()));
+            context.write(new Text(author), new Text(tfidf.toString()));
         }
 
     }
