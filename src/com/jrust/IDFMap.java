@@ -20,6 +20,6 @@ public class IDFMap extends Mapper<LongWritable, Text, Text, Text> {
         String term   = split[1];
         String tf     = split[2];
 
-        context.write(new Text(term), new Text(author + "\t" + tf));
+        context.write(new Text(term), new Text(author + " " + tf));
     }
 }

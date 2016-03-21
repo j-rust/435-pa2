@@ -32,6 +32,9 @@ public class Main {
         count.setJobName("Author Count");
         count.setJarByClass(Main.class);
 
+        count.setOutputKeyClass(Text.class);
+        count.setOutputValueClass(Text.class);
+
         count.setMapperClass(AuthorCountMap.class);
         count.setReducerClass(AuthorCountReduce.class);
 
@@ -41,29 +44,30 @@ public class Main {
         count.waitForCompletion(true);
 
         long authors = count.getCounters().findCounter(Counters.TOTAL_AUTHORS).getValue();
+        System.out.println("**********AUTHORS: " + authors);
 
         cleanup(count.getConfiguration(), "/tmp/out/authorCount");
 
+
         /* Term Frequency job */
-        Configuration tfConf = new Configuration();
+//        Configuration tfConf = new Configuration();
 //        tfConf.set("authors", authors + "");
-
-        Job tf = Job.getInstance(tfConf, "main");
-        tf.setJobName("TF");
-
-        tf.setJarByClass(Main.class);
-
-        tf.setOutputKeyClass(Text.class);
-        tf.setOutputValueClass(Text.class);
-
-        tf.setReducerClass(TFReduce.class);
-        tf.setMapperClass(TFMap.class);
-
-        FileInputFormat.setInputPaths(tf, new Path(args[0]));
-        FileOutputFormat.setOutputPath(tf, new Path(args[1]));
+//
+//        Job tf = Job.getInstance(tfConf, "main");
+//        tf.setJobName("TF");
+//
+//        tf.setJarByClass(Main.class);
+//
+//        tf.setOutputKeyClass(Text.class);
+//        tf.setOutputValueClass(Text.class);
+//
+//        tf.setReducerClass(TFReduce.class);
+//        tf.setMapperClass(TFMap.class);
+//
+//        FileInputFormat.setInputPaths(tf, new Path(args[0]));
 //        FileOutputFormat.setOutputPath(tf, new Path("/tmp/out/tfOut"));
-
-        tf.waitForCompletion(true);
+//
+//        tf.waitForCompletion(true);
 
         /* Inverted Document Frequency job */
         Configuration idfConf = new Configuration();
@@ -84,6 +88,7 @@ public class Main {
         FileOutputFormat.setOutputPath(idf, new Path(args[1]));
 
         idf.waitForCompletion(true);
-        cleanup(idfConf, "/tmp/out/tfOut");
+//        cleanup(idfConf, "/tmp/out/tfOut");
+
     }
 }

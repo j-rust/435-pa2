@@ -5,6 +5,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -21,16 +22,24 @@ public class IDFReduce extends Reducer<Text, Text, Text, Text> {
         Configuration conf = context.getConfiguration();
         long total_authors = Long.parseLong(conf.get("authors"));
         HashSet<String> authors = new HashSet<>();
-        for (Text t : values) {
-            String author = t.toString().split("\\s")[0];
-            authors.add(author);
-        }
-        Integer author_count = authors.size();
-        Double idf = Math.log(total_authors / author_count);
+        ArrayList<String> values_list = new ArrayList<>();
 
         for (Text t : values) {
-            String author = t.toString().split("\\s")[0];
-            Double tf = Double.parseDouble(t.toString().split("\\s")[1]);
+            String[] t_split = t.toString().split("\\s+");
+            String author = t_split[0];
+            String tf = t_split[1];
+            if(!author.equals("")) {
+                authors.add(author);
+                values_list.add(author + " " + tf);
+            }
+        }
+        Integer author_count = authors.size();
+        Double idf = Math.log((double)total_authors / (double)author_count);
+
+        for (String s : values_list) {
+            String[] split = s.split(" ");
+            String author = split[0];
+            Double tf = Double.parseDouble(split[1]);
             Double tfidf = tf*idf;
             context.write(new Text(key.toString() + " " + author), new Text(tfidf.toString()));
         }
