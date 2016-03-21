@@ -106,6 +106,7 @@ public class Main {
         FileInputFormat.setInputPaths(aav, new Path("/tmp/out/tfidfOut"));
         FileOutputFormat.setOutputPath(aav, new Path(args[1]));
 
-//        cleanup(aavConf, "/tmp/out/tfidfOut");
+        aav.waitForCompletion(true);
+        cleanup(aavConf, "/tmp/out/tfidfOut");
     }
 }
