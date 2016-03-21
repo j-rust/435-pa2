@@ -50,24 +50,24 @@ public class Main {
 
 
         /* Term Frequency job */
-//        Configuration tfConf = new Configuration();
-//        tfConf.set("authors", authors + "");
-//
-//        Job tf = Job.getInstance(tfConf, "main");
-//        tf.setJobName("TF");
-//
-//        tf.setJarByClass(Main.class);
-//
-//        tf.setOutputKeyClass(Text.class);
-//        tf.setOutputValueClass(Text.class);
-//
-//        tf.setReducerClass(TFReduce.class);
-//        tf.setMapperClass(TFMap.class);
-//
-//        FileInputFormat.setInputPaths(tf, new Path(args[0]));
-//        FileOutputFormat.setOutputPath(tf, new Path("/tmp/out/tfOut"));
-//
-//        tf.waitForCompletion(true);
+        Configuration tfConf = new Configuration();
+        tfConf.set("authors", authors + "");
+
+        Job tf = Job.getInstance(tfConf, "main");
+        tf.setJobName("TF");
+
+        tf.setJarByClass(Main.class);
+
+        tf.setOutputKeyClass(Text.class);
+        tf.setOutputValueClass(Text.class);
+
+        tf.setReducerClass(TFReduce.class);
+        tf.setMapperClass(TFMap.class);
+
+        FileInputFormat.setInputPaths(tf, new Path(args[0]));
+        FileOutputFormat.setOutputPath(tf, new Path("/tmp/out/tfOut"));
+
+        tf.waitForCompletion(true);
 
         /* Inverted Document Frequency job */
         Configuration idfConf = new Configuration();
@@ -85,10 +85,28 @@ public class Main {
         idf.setReducerClass(IDFReduce.class);
 
         FileInputFormat.setInputPaths(idf, new Path("/tmp/out/tfOut"));
-        FileOutputFormat.setOutputPath(idf, new Path(args[1]));
+        FileOutputFormat.setOutputPath(idf, new Path("/tmp/out/tfidfOut"));
 
         idf.waitForCompletion(true);
-//        cleanup(idfConf, "/tmp/out/tfOut");
+        cleanup(idfConf, "/tmp/out/tfOut");
 
+        Configuration aavConf = new Configuration();
+        Job aav = Job.getInstance(aavConf, "main");
+
+        aav.setJobName("AAV");
+
+        aav.setJarByClass(Main.class);
+
+        aav.setOutputKeyClass(Text.class);
+        aav.setOutputValueClass(Text.class);
+
+        aav.setMapperClass(AAVMap.class);
+        aav.setReducerClass(AAVReduce.class);
+
+        FileInputFormat.setInputPaths(aav, new Path("/tmp/out/tfidfOut"));
+        FileOutputFormat.setOutputPath(aav, new Path(args[1]));
+
+        aav.waitForCompletion(true);
+        cleanup(aavConf, "/tmp/out/tfidfOut");
     }
 }
