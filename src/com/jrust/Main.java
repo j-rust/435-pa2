@@ -85,10 +85,11 @@ public class Main {
         idf.setReducerClass(IDFReduce.class);
 
         FileInputFormat.setInputPaths(idf, new Path("/tmp/out/tfOut"));
-        FileOutputFormat.setOutputPath(idf, new Path(args[1]));
+        FileOutputFormat.setOutputPath(idf, new Path("/tmp/out/tfidfOut"));
 
         idf.waitForCompletion(true);
 //        cleanup(idfConf, "/tmp/out/tfOut");
+        
 
     }
 }
