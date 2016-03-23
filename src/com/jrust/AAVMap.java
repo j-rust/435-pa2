@@ -13,10 +13,12 @@ public class AAVMap extends Mapper<LongWritable, Text, Text, Text> {
 
     @Override
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
-        String[] split = value.toString().split("\\s+");
-        String author = split[0];
-        String tfidf  = split[1];
+        String[] split = value.toString().split("\t");
 
-        context.write(new Text(author), new Text(tfidf));
+        String author = split[0];
+        String term   = split[1];
+        String tfidf  = split[2];
+
+        context.write(new Text(author), new Text(term + "\t" + tfidf));
     }
 }

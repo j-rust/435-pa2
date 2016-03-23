@@ -5,6 +5,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -25,23 +26,25 @@ public class IDFReduce extends Reducer<Text, Text, Text, Text> {
         ArrayList<String> values_list = new ArrayList<>();
 
         for (Text t : values) {
-            String[] t_split = t.toString().split("\\s+");
+            String[] t_split = t.toString().split("\t");
             String author = t_split[0];
             String tf = t_split[1];
             if(!author.equals("")) {
                 authors.add(author);
-                values_list.add(author + " " + tf);
+                values_list.add(author + "\t" + tf);
             }
         }
         Integer author_count = authors.size();
-        Double idf = Math.log((double)total_authors / (double)author_count);
+        Double idf = Math.log((double)total_authors / (double)author_count) / Math.log(2.0);
 
         for (String s : values_list) {
-            String[] split = s.split(" ");
+            String[] split = s.split("\t");
             String author = split[0];
-            Double tf = Double.parseDouble(split[1]);
-            Double tfidf = tf*idf;
-            context.write(new Text(author), new Text(tfidf.toString()));
+            double tf = Double.parseDouble(split[1]);
+            double tfidf = tf*idf;
+            DecimalFormat df = new DecimalFormat("0.000000000000000");
+            context.write(new Text(author), new Text(key.toString() + "\t" +
+                    df.format(tfidf)));
         }
 
     }

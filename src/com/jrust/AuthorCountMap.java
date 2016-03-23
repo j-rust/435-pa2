@@ -15,9 +15,9 @@ public class AuthorCountMap extends Mapper<LongWritable, Text, Text, Text> {
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         String[] split = value.toString().split("<===>");
         if(split.length == 1) return; /* Line doesn't contain key denoting author, no work to do */
-        String[] author_split = split[0].split("\\s+");
-        String author;
-        author = author_split[author_split.length - 1].toLowerCase();
+
+        String author = split[0];
+
         context.write(new Text("tmpKey"), new Text(author));
     }
 }

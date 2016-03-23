@@ -4,6 +4,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 /**
@@ -31,8 +32,9 @@ public class TFReduce extends Reducer<Text, Text, Text, Text> {
         for (HashMap.Entry<String, Integer> entry : term_count.entrySet()) {
             String term = entry.getKey();
             Integer count = entry.getValue();
-            Double tf = (double)count / (double)max_count;
-            String value_string = term + "\t" + tf.toString();
+            double tf = (double)count / (double)max_count;
+            DecimalFormat df = new DecimalFormat("0.000000000000000");
+            String value_string = term + "\t" + df.format(tf);
             context.write(key, new Text(value_string));
         }
 
