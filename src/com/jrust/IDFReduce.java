@@ -44,7 +44,7 @@ public class IDFReduce extends Reducer<Text, Text, Text, Text> {
             double tfidf = tf*idf;
             DecimalFormat df = new DecimalFormat("0.000000000000000");
             context.write(new Text(author), new Text(key.toString() + "\t" +
-                    df.format(tfidf)));
+                    df.format(tfidf) + "\t" + df.format(idf)));
         }
 
     }
