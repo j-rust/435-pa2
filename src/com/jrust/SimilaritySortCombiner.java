@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by Jonathan Rust on 3/23/16.
+ * Created by Jonathan Rust on 3/24/16.
  */
-public class SimilaritySortReduce extends Reducer<Text, Text, Text, Text> {
+public class SimilaritySortCombiner extends Reducer<Text, Text, Text, Text> {
+
 
     @Override
     public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
@@ -23,7 +24,11 @@ public class SimilaritySortReduce extends Reducer<Text, Text, Text, Text> {
             sim_map.put(author, sim);
         }
 
-        for(int i = 0; i < 10; i++) {
+        int max = 10;
+        if(sim_map.size() < 10) {
+            max = sim_map.size();
+        }
+        for(int i = 0; i < max; i++) {
             Double max_sim = -2.0;
             String max_author = "";
             for (HashMap.Entry<String, Double> entry : sim_map.entrySet()) {
@@ -37,8 +42,8 @@ public class SimilaritySortReduce extends Reducer<Text, Text, Text, Text> {
         }
 
         for (String pair : best_matches) {
-            String[] split = pair.split("\t");
-            context.write(new Text(split[1]), new Text(split[0]));
+            context.write(key, new Text(pair));
         }
     }
+
 }

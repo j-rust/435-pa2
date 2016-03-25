@@ -15,5 +15,6 @@ public class SimilaritySortMap extends Mapper<LongWritable, Text, Text, Text> {
     @Override
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
+        context.write(new Text("tmpKey"), value);
     }
 }

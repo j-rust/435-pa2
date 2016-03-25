@@ -9,22 +9,21 @@ import java.io.IOException;
 /**
  * Created by Jonathan Rust on 3/23/16.
  */
-public class UnknownTFMap extends Mapper<LongWritable, Text, Text, Text> {
-
+public class IDFCacheMap extends Mapper<LongWritable, Text, Text, Text> {
 
     /**
-     * Parses the document with unknown author
-     * Outputs <"unknown", term>
+     * Method used solely to cache tfidf values for use later on in author detection
+     * Input is a line from IDFReduce output
      * @param key
      * @param value
      * @param context
-     * @throws IOException
-     * @throws InterruptedException
      */
     @Override
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String[] split = value.toString().split("\t");
+        String term = split[1];
+        String idf = split[3];
 
+        context.write(new Text(term), new Text(idf));
     }
-
 }
-
